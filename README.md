@@ -10,4 +10,4 @@ An advanced Tic Tac Toe game with:
 HTML, CSS, JavaScript
 
 ## Live Demo
-(Add later if deployed)
+https://mdnuraman.github.io/Smart-Tic-Tac-Toe/
