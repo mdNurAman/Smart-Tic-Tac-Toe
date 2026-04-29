@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tic Tac Toe</title>
+    <script>
+      (function () {
+        try {
+          var savedTheme = localStorage.getItem("ticTacToeTheme") || "dark";
+          document.documentElement.dataset.theme = savedTheme === "light" ? "light" : "dark";
+        } catch (error) {
+          document.documentElement.dataset.theme = "dark";
+        }
+      })();
+    </script>
+    <link rel="stylesheet" href="./style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+      integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="game-card mode-card" id="mode-screen" aria-labelledby="mode-title">
+        <div class="header-copy">
+          <p class="eyebrow">Game setup</p>
+          <h1 id="mode-title">Pick how you want to play</h1>
+          <p class="subtitle">Choose a mode and board size before starting the match.</p>
+        </div>
+
+        <div class="setup-grid">
+          <section class="setup-panel">
+            <div class="panel-header">
+              <h2>1. Choose Mode</h2>
+              <p>Local head-to-head or against the computer.</p>
+            </div>
+
+            <div class="mode-options">
+              <button class="mode-btn" type="button" data-mode="pvp">
+                <span class="mode-label">Player vs Player</span>
+                <span class="mode-note">Two local players take turns on the same device.</span>
+              </button>
+
+              <button class="mode-btn" type="button" data-mode="pvc">
+                <span class="mode-label">Player vs Computer</span>
+                <span class="mode-note">Play against a simple built-in computer opponent.</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="setup-panel">
+            <div class="panel-header">
+              <h2>2. Choose Board Size</h2>
+              <p>Every row, column, or diagonal must fill to win.</p>
+            </div>
+
+            <div class="size-options" role="group" aria-label="Board size options">
+              <button class="size-btn" type="button" data-board-size="3">3 × 3</button>
+              <button class="size-btn" type="button" data-board-size="4">4 × 4</button>
+              <button class="size-btn" type="button" data-board-size="5">5 × 5</button>
+            </div>
+
+            <button id="start-game-btn" type="button" class="start-game-btn">Start Game</button>
+          </section>
+        </div>
+      </section>
+
+      <section class="game-card">
+        <div class="header-copy">
+          <p class="eyebrow">Classic game</p>
+          <h1>Tic Tac Toe</h1>
+          <p class="subtitle">Play locally, spot the winner fast, and reset instantly.</p>
+        </div>
+
+        <div class="mode-strip">
+          <span id="mode-badge">Mode: Not selected</span>
+          <span id="board-badge">Board: 3 × 3</span>
+          <div class="mode-actions">
+            <button id="drawer-toggle-btn" type="button" class="drawer-toggle-btn">Stats & History</button>
+            <button id="theme-toggle-btn" type="button" class="drawer-toggle-btn">Light mode</button>
+            <button id="sound-toggle-btn" type="button" class="drawer-toggle-btn">Sound: On</button>
+            <button id="change-mode-btn" type="button">Change Mode</button>
+            <button id="restart-board-btn" type="button" class="drawer-toggle-btn">Restart Board</button>
+          </div>
+        </div>
+
+        <div class="game-workspace">
+          <div class="drawer-panels" id="drawer-panels">
+            <aside class="side-panel side-panel-left">
+              <section class="stats-panel" aria-labelledby="stats-title">
+                <div class="stats-header">
+                  <div>
+                    <h2 id="stats-title">Scoreboard</h2>
+                    <p>Wins, losses, and draws are saved locally.</p>
+                  </div>
+                  <button id="clear-scoreboard-btn" type="button" class="clear-score-btn">Clear</button>
+                </div>
+
+                <div class="stats-grid" id="stats-grid">
+                  <article class="stats-card">
+                    <span class="stats-label" id="stats-left-label">Player O</span>
+                    <strong class="stats-value" id="stats-left-total">0</strong>
+                    <span class="stats-note">Wins</span>
+                  </article>
+
+                  <article class="stats-card">
+                    <span class="stats-label" id="stats-right-label">Player X</span>
+                    <strong class="stats-value" id="stats-right-total">0</strong>
+                    <span class="stats-note">Wins</span>
+                  </article>
+
+                  <article class="stats-card stats-card-wide">
+                    <span class="stats-label">Draws</span>
+                    <strong class="stats-value" id="stats-draws">0</strong>
+                    <span class="stats-note">Shared results</span>
+                  </article>
+                </div>
+              </section>
+
+              <section class="history-panel" aria-labelledby="history-title">
+                <div class="history-header">
+                  <div>
+                    <h3 id="history-title">Recent Matches</h3>
+                    <span class="history-count" id="history-count">0 stored</span>
+                  </div>
+                </div>
+                <ul class="history-list" id="history-list"></ul>
+              </section>
+            </aside>
+
+            <button type="button" class="drawer-close-btn" id="drawer-close-btn">Close drawer</button>
+          </div>
+
+          <div class="board-column">
+            <div class="container">
+              <div class="game" id="board" aria-label="Tic Tac Toe board"></div>
+            </div>
+            <div id="infos">
+              <button id="reset-btn" type="button">Reset Game</button>
+              <span id="winner-container"
+                >Result <i class="fa-solid fa-arrow-right"></i> <span id="winner-box">Not Ended</span></span
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="./app.js"></script>
+  </body>
+</html>
